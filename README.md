@@ -1,41 +1,17 @@
-# 🛠️ Gestor de Incidencias
+# Sistema de Gestión de Incidencias (Helpdesk IT)
 
-Aplicación web full-stack para la gestión de incidencias.
+Aplicación web para la gestión de incidencias en entornos de soporte técnico.
 
-## 🚀 Tecnologías utilizadas
-- Node.js
-- Express
-- JavaScript (Frontend)
-- HTML + CSS
-
-## 📂 Estructura del proyecto
-backend/ → API REST (Node.js)
-js/ → lógica frontend
-index.html → interfaz
-styles.css → estilos
-## 🔐 Funcionalidades
-- Login con autenticación
+## Funcionalidades
 - Crear incidencias
-- Ver incidencias (público/privado)
 - Cambiar estado
 - Eliminar incidencias
+- Dashboard con métricas
 
-## ▶️ Cómo ejecutar el proyecto
+## Tecnologías
+- Node.js
+- Express
+- JavaScript
 
-1. Clonar repositorio:
-git clone 
-https://github.com/Sergio169157/gestor-incidencias-js.git
-2. Entrar en backend:
-cd backend
-3. Instalar dependencias:
-npm install
-4. Ejecutar servidor:
-node server.js
-5. Abrir `index.html` en el navegador
-
-## 👤 Usuario de prueba
-- Usuario: admin
-- Contraseña: 1234
-
-## 📌 Notas
-El backend corre en `http://localhost:3000`
+## Objetivo
+Simular un entorno real de soporte IT.

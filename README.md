@@ -1,31 +1,40 @@
-# Gestor de Incidencias (v1.0)
+# 🛠️ Gestor de Incidencias
 
-Aplicación web desarrollada en JavaScript puro utilizando arquitectura modular con ES Modules.
+Aplicación web full-stack para la gestión de incidencias.
 
-## 📌 Características
+## 🚀 Tecnologías utilizadas
+- Node.js
+- Express
+- JavaScript (Frontend)
+- HTML + CSS
 
-- Arquitectura separada en:
-  - state (gestión de datos)
-  - render (interfaz)
-  - events (controladores)
-- Persistencia con localStorage
-- Filtros por estado
-- Buscador en tiempo real
-- Ordenación por fecha y prioridad
-- Contador dinámico de incidencias
+## 📂 Estructura del proyecto
+backend/ → API REST (Node.js)
+js/ → lógica frontend
+index.html → interfaz
+styles.css → estilos
+## 🔐 Funcionalidades
+- Login con autenticación
+- Crear incidencias
+- Ver incidencias (público/privado)
+- Cambiar estado
+- Eliminar incidencias
 
-## 🛠 Tecnologías
+## ▶️ Cómo ejecutar el proyecto
 
-- HTML5
-- CSS3
-- JavaScript (ES Modules)
-- Git
-- GitHub
+1. Clonar repositorio:
+git clone https://github.com/TU_USUARIO gestor-incidencias-js.git
+2. Entrar en backend:
+cd backend
+3. Instalar dependencias:
+npm install
+4. Ejecutar servidor:
+node server.js
+5. Abrir `index.html` en el navegador
 
-## 🚀 Próximo paso
+## 👤 Usuario de prueba
+- Usuario: admin
+- Contraseña: 1234
 
-Conectar la aplicación a un backend con Node.js y Express para convertirla en una aplicación multiusuario.
-
----
-
-Proyecto desarrollado como práctica de arquitectura frontend modular.
+## 📌 Notas
+El backend corre en `http://localhost:3000`

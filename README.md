@@ -23,7 +23,8 @@ styles.css → estilos
 ## ▶️ Cómo ejecutar el proyecto
 
 1. Clonar repositorio:
-git clone https://github.com/TU_USUARIO gestor-incidencias-js.git
+git clone 
+https://github.com/Sergio169157/gestor-incidencias-js.git
 2. Entrar en backend:
 cd backend
 3. Instalar dependencias:

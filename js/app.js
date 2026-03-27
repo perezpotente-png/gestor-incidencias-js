@@ -1,5 +1,4 @@
 const API = "https://gestor-incidencias-js.onrender.com";
-
 // ==========================
 // INICIO APP
 // ==========================
@@ -13,7 +12,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   document.addEventListener("click", manejarClicksGlobal);
 });
-
 
 // ==========================
 // EVENTOS GLOBALES
@@ -43,7 +41,6 @@ function manejarClicksGlobal(e) {
   }
 }
 
-
 // ==========================
 // EVENTOS INCIDENCIAS
 // ==========================
@@ -69,9 +66,8 @@ function manejarClicksIncidencias(e) {
   }
 }
 
-
 // ==========================
-// LOGIN (CORREGIDO 🔥)
+// LOGIN
 // ==========================
 async function login() {
   const usuario = document.getElementById("usuario").value;
@@ -88,15 +84,13 @@ async function login() {
 
     const data = await res.json();
 
-    if (!res.ok) {
+    if (!res.ok || !data.token) {
       alert("Credenciales incorrectas");
       return;
     }
 
-    // Guardar token
     localStorage.setItem("token", data.token);
 
-    // Adaptar datos del usuario (según backend)
     const userData = data.user || {
       usuario: data.usuario,
       rol: data.rol
@@ -113,9 +107,9 @@ async function login() {
 
   } catch (error) {
     console.error("Error login:", error);
+    alert("Error de conexión");
   }
 }
-
 
 // ==========================
 // ELIMINAR
@@ -137,6 +131,12 @@ async function eliminarIncidencia(id) {
     }
   });
 
+  if (res.status === 401) {
+    alert("Sesión expirada");
+    localStorage.removeItem("token");
+    return;
+  }
+
   if (!res.ok) {
     alert("Error al eliminar");
     return;
@@ -144,7 +144,6 @@ async function eliminarIncidencia(id) {
 
   cargarIncidencias();
 }
-
 
 // ==========================
 // CAMBIAR ESTADO
@@ -157,7 +156,7 @@ async function cambiarEstado(id, estado) {
     return;
   }
 
-  await fetch(API + "/api/incidencias/" + id, {
+  const res = await fetch(API + "/api/incidencias/" + id, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -166,9 +165,14 @@ async function cambiarEstado(id, estado) {
     body: JSON.stringify({ estado })
   });
 
+  if (res.status === 401) {
+    alert("Sesión expirada");
+    localStorage.removeItem("token");
+    return;
+  }
+
   cargarIncidencias();
 }
-
 
 // ==========================
 // CARGAR INCIDENCIAS
@@ -176,19 +180,23 @@ async function cambiarEstado(id, estado) {
 async function cargarIncidencias() {
   const token = localStorage.getItem("token");
 
-  const url = token && token !== "token_fake_123"
+  const url = token
     ? API + "/api/incidencias"
     : API + "/api/incidencias/public";
 
   const res = await fetch(url, {
-    headers: token && token !== "token_fake_123"
+    headers: token
       ? { "Authorization": "Bearer " + token }
       : {}
   });
 
+  if (res.status === 401) {
+    localStorage.removeItem("token");
+    return;
+  }
+
   const data = await res.json();
 
-  // CONTADORES
   let pendientes = 0;
   let proceso = 0;
   let resueltas = 0;
@@ -199,17 +207,14 @@ async function cargarIncidencias() {
     if (i.estado === "resuelta") resueltas++;
   });
 
-  // DASHBOARD
   document.getElementById("pendientes").textContent = pendientes;
   document.getElementById("proceso").textContent = proceso;
   document.getElementById("resueltas").textContent = resueltas;
 
-  // ESTADÍSTICAS
   document.getElementById("pendientes2").textContent = pendientes;
   document.getElementById("proceso2").textContent = proceso;
   document.getElementById("resueltas2").textContent = resueltas;
 
-  // LISTA
   const lista = document.getElementById("lista-incidencias");
   if (!lista) return;
 
@@ -250,7 +255,6 @@ async function cargarIncidencias() {
   });
 }
 
-
 // ==========================
 // CAMBIO DE VISTAS
 // ==========================
@@ -262,9 +266,8 @@ function mostrarVista(id) {
   document.getElementById(id).classList.add("active-view");
 }
 
-
 // ==========================
-// CREAR INCIDENCIA
+// CREAR INCIDENCIA (PROTEGIDO 🔐)
 // ==========================
 document.addEventListener("submit", async (e) => {
 
@@ -274,14 +277,28 @@ document.addEventListener("submit", async (e) => {
     const titulo = document.getElementById("titulo").value;
     const descripcion = document.getElementById("descripcion").value;
 
+    const token = localStorage.getItem("token");
+
+    if (!token) {
+      alert("Debes iniciar sesión");
+      return;
+    }
+
     try {
-      const res = await fetch(API + "/api/incidencias/public", {
+      const res = await fetch(API + "/api/incidencias", {
         method: "POST",
         headers: {
-          "Content-Type": "application/json"
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + token
         },
         body: JSON.stringify({ titulo, descripcion })
       });
+
+      if (res.status === 401) {
+        alert("Sesión expirada");
+        localStorage.removeItem("token");
+        return;
+      }
 
       if (!res.ok) {
         alert("Error al crear incidencia");

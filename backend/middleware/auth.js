@@ -1,17 +1,29 @@
-module.exports = (req, res, next) => {
-  const token = req.headers.authorization;
+const jwt = require("jsonwebtoken");
 
-  // 🔴 SIN TOKEN
-  if (!token) {
+module.exports = (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  // 🔒 Comprobar token
+  if (!authHeader) {
     return res.status(401).json({ msg: "No autorizado" });
   }
 
-  // 🧪 SIMULACIÓN SIMPLE (puedes mejorar luego)
-  if (token === "admin") {
-    req.user = { usuario: "admin", rol: "admin" };
-  } else {
-    req.user = { usuario: "user", rol: "user" };
+  // Formato: "Bearer TOKEN"
+  const token = authHeader.split(" ")[1];
+
+  if (!token) {
+    return res.status(401).json({ msg: "Token inválido" });
   }
 
-  next();
+  try {
+    // 🔐 Verificar token JWT
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+
+    // Guardar usuario en request
+    req.user = decoded;
+
+    next();
+  } catch (error) {
+    return res.status(401).json({ msg: "Token inválido o expirado" });
+  }
 };

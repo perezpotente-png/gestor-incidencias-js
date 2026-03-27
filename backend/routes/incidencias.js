@@ -2,24 +2,38 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middleware/auth");
 
-// DATOS FAKE (puedes cambiarlo luego por BD)
+// Simulación de base de datos
 let incidencias = [
-  { id: 1, titulo: "Error login", descripcion: "No funciona", estado: "pendiente", usuario: "anonimo" }
+  {
+    id: 1,
+    titulo: "Error login",
+    descripcion: "No funciona",
+    estado: "pendiente",
+    usuario: "anonimo"
+  }
 ];
 
-
 // =========================
-// 🟢 CREAR (PUBLICO)
+// 🔐 CREAR INCIDENCIA (PROTEGIDO)
 // =========================
-router.post("/public", (req, res) => {
+router.post("/", authMiddleware, (req, res) => {
   const { titulo, descripcion } = req.body;
+
+  // Validación básica
+  if (!titulo || titulo.length < 3) {
+    return res.status(400).json({ error: "Título inválido" });
+  }
+
+  if (!descripcion || descripcion.length < 3) {
+    return res.status(400).json({ error: "Descripción inválida" });
+  }
 
   const nueva = {
     id: Date.now(),
     titulo,
     descripcion,
     estado: "pendiente",
-    usuario: "anonimo"
+    usuario: req.user.usuario // 🔥 usuario real del token
   };
 
   incidencias.push(nueva);
@@ -27,28 +41,29 @@ router.post("/public", (req, res) => {
   res.json(nueva);
 });
 
-
 // =========================
-// 🟢 VER PUBLICO
+// 🟢 VER PUBLICO (OPCIONAL)
 // =========================
 router.get("/public", (req, res) => {
   res.json(incidencias);
 });
 
-
 // =========================
-// 🔐 VER PRIVADO (logueado)
+// 🔐 VER PRIVADO (LOGUEADO)
 // =========================
 router.get("/", authMiddleware, (req, res) => {
   res.json(incidencias);
 });
-
 
 // =========================
 // 🔐 CAMBIAR ESTADO
 // =========================
 router.put("/:id", authMiddleware, (req, res) => {
   const { estado } = req.body;
+
+  if (!["pendiente", "proceso", "resuelta"].includes(estado)) {
+    return res.status(400).json({ error: "Estado inválido" });
+  }
 
   incidencias = incidencias.map(i =>
     i.id == req.params.id ? { ...i, estado } : i
@@ -57,13 +72,11 @@ router.put("/:id", authMiddleware, (req, res) => {
   res.json({ ok: true });
 });
 
-
 // =========================
 // 🔥 BORRAR (SOLO ADMIN)
 // =========================
 router.delete("/:id", authMiddleware, (req, res) => {
 
-  // 🔒 CONTROL DE ROL
   if (!req.user || req.user.rol !== "admin") {
     return res.status(403).json({ msg: "Solo admin puede eliminar" });
   }
@@ -72,6 +85,5 @@ router.delete("/:id", authMiddleware, (req, res) => {
 
   res.json({ ok: true });
 });
-
 
 module.exports = router;

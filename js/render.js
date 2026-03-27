@@ -1,56 +1,55 @@
-export function renderizar(lista, contenedor) {
-  contenedor.innerHTML = "";
+const API = "https://gestor-incidencias-js.onrender.com";
 
-  const ordenadas = [...lista].sort((a, b) => {
-    return (b.fecha || 0) - (a.fecha || 0);
-  });
+async function cargarIncidencias() {
+  try {
+    const response = await fetch(`${API}/api/incidencias`, {
+      headers: {
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    });
 
-  ordenadas.forEach(incidencia => {
-    const div = document.createElement("div");
+    const incidencias = await response.json();
 
-    div.classList.add("incidencia", incidencia.prioridad);
-    div.dataset.id = incidencia.id;
+    const contenedor = document.getElementById("lista-incidencias");
+    contenedor.innerHTML = "";
 
-    let textoBoton = "";
+    const usuario = JSON.parse(localStorage.getItem("usuario"));
 
-    if (incidencia.estado === "pendiente") {
-      textoBoton = "Pasar a En proceso";
-    } else if (incidencia.estado === "en-proceso") {
-      textoBoton = "Marcar como Resuelta";
-    } else {
-      textoBoton = "Reabrir";
-    }
+    incidencias.forEach(inc => {
+      const div = document.createElement("div");
+      div.classList.add("incidencia");
 
-    // 🔥 Manejo seguro de fecha
-    let fechaFormateada = "Sin fecha";
+      // 🧠 BOTONES DINÁMICOS (NO MOSTRAR EL ACTUAL)
+      let botones = "";
 
-    if (incidencia.fecha) {
-      fechaFormateada = new Date(incidencia.fecha).toLocaleString();
-    }
+      if (inc.estado !== "pendiente") {
+        botones += `<button onclick="cambiarEstado(${inc.id}, 'pendiente')">Pendiente</button>`;
+      }
 
-    div.innerHTML = `
-      <h3>${incidencia.titulo}</h3>
-      <p>${incidencia.descripcion}</p>
-      <p><strong>Prioridad:</strong> ${incidencia.prioridad}</p>
-      <p><strong>Estado:</strong> ${incidencia.estado.replace("-", " ")}</p>
-      <p><small>Creada: ${fechaFormateada}</small></p>
+      if (inc.estado !== "proceso") {
+        botones += `<button onclick="cambiarEstado(${inc.id}, 'proceso')">Proceso</button>`;
+      }
 
-      <button class="btn-eliminar">Eliminar</button>
-      <button class="btn-estado">${textoBoton}</button>
-      <button class="btn-editar">Editar</button>
-    `;
+      if (inc.estado !== "resuelta") {
+        botones += `<button onclick="cambiarEstado(${inc.id}, 'resuelta')">Resuelta</button>`;
+      }
 
-    contenedor.appendChild(div);
-  });
-}
+      // 🔒 SOLO ADMIN VE ELIMINAR
+      if (usuario && usuario.rol === "admin") {
+        botones += `<button onclick="eliminar(${inc.id})">Eliminar</button>`;
+      }
 
-export function actualizarContador(lista) {
-  document.getElementById("count-pendiente").textContent =
-    lista.filter(i => i.estado === "pendiente").length;
+      div.innerHTML = `
+        <h4>${inc.titulo}</h4>
+        <p>${inc.descripcion}</p>
+        <span class="estado ${inc.estado}">${inc.estado}</span>
+        <div class="botones">${botones}</div>
+      `;
 
-  document.getElementById("count-proceso").textContent =
-    lista.filter(i => i.estado === "en-proceso").length;
+      contenedor.appendChild(div);
+    });
 
-  document.getElementById("count-resuelta").textContent =
-    lista.filter(i => i.estado === "resuelta").length;
+  } catch (error) {
+    console.error("Error cargando incidencias:", error);
+  }
 }

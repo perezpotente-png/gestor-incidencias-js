@@ -1,194 +1,257 @@
-/* =========================
-   RESET
-========================= */
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: "Segoe UI", Tahoma, sans-serif;
-}
-
 body {
-  background: #f4f6f9;
-  color: #333;
+  margin: 0;
+  font-family: 'Inter', sans-serif;
+  background: #f1f5f9;
 }
 
-/* =========================
-   HEADER
-========================= */
+/* LAYOUT */
+.layout {
+  display: flex;
+}
 
-.header {
-  background: #2c3e50;
+/* SIDEBAR */
+.sidebar {
+  width: 240px;
+  background: #020617;
   color: white;
-  padding: 20px 40px;
-
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  height: 100vh;
+  padding: 25px;
 }
 
-.header h1 {
-  font-size: 24px;
+.sidebar h2 {
+  margin-bottom: 30px;
 }
 
-.auth {
+.sidebar a {
+  display: block;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.sidebar a:hover,
+.sidebar .active {
+  background: #1e293b;
+}
+
+/* MAIN */
+.main {
+  flex: 1;
+  padding: 30px;
+}
+
+/* HEADER */
+.header {
   display: flex;
-  align-items: center;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.btn-outline {
+  border: 1px solid #3b82f6;
+  background: transparent;
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: #3b82f6;
+}
+
+/* CARDS */
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  animation: fadeIn 0.4s ease;
+}
+
+/* FORM */
+.form {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr auto;
   gap: 10px;
 }
 
-.auth span {
-  font-size: 14px;
-  opacity: 0.9;
+.form textarea {
+  grid-column: span 2;
 }
 
-/* =========================
-   BOTONES GENERALES
-========================= */
+.form input,
+.form textarea {
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
 
-button {
-  padding: 8px 14px;
+/* BOTONES */
+.btn-primary {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 8px;
+  padding: 10px;
   cursor: pointer;
-  transition: 0.2s ease;
-  font-weight: 500;
 }
 
-button:hover {
-  opacity: 0.9;
+
+
+/* LISTA */
+.lista {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-
-#btn-login {
-  background: #3498db;
-  color: white;
-}
-
-#btn-logout {
-  background: #e74c3c;
-  color: white;
-}
-
-.btn-eliminar {
-  background: #e74c3c;
-  color: white;
-  margin-right: 8px;
-}
-
-.btn-estado {
-  background: #27ae60;
-  color: white;
-}
-
-/* =========================
-   MAIN LAYOUT
-========================= */
-
-main {
-  display: grid;
-  grid-template-columns: 350px 1fr;
-  gap: 30px;
-  padding: 30px 40px;
-}
-
-/* =========================
-   FORMULARIO
-========================= */
-
-.form-section {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.form-section h2 {
-  margin-bottom: 15px;
-}
-
-form input,
-form textarea,
-form select {
-  width: 100%;
-  margin-bottom: 12px;
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-form button {
-  width: 100%;
-  background: #3b82f6;
-  color: white;
-  font-weight: 600;
-}
-
-/* =========================
-   LISTA INCIDENCIAS
-========================= */
-
-.lista-section {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-}
-
-.lista-section h2 {
-  margin-bottom: 10px;
-}
-
-.contador {
-  margin-bottom: 15px;
-  font-weight: 500;
-}
-
-#buscador {
-  width: 100%;
-  padding: 10px;
-  margin-bottom: 20px;
-  border-radius: 6px;
-  border: 1px solid #ddd;
-}
-
-/* =========================
-   TARJETAS
-========================= */
 
 .incidencia {
-  background: #f9fafb;
+  background: #f8fafc;
   padding: 15px;
-  margin-bottom: 15px;
-  border-left: 5px solid #3b82f6;
-  border-radius: 8px;
-  transition: 0.2s ease;
+  border-radius: 10px;
+}
+
+/* VISTAS */
+.view {
+  display: none;
+}
+
+.active-view {
+  display: block;
+}
+
+/* ANIMACIÓN */
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(10px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* ===== INCIDENCIAS PRO ===== */
+
+.lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 15px;
+}
+
+.incidencia {
+  background: white;
+  padding: 18px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transition: 0.3s;
+  position: relative;
+  overflow: hidden;
 }
 
 .incidencia:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+  transform: translateY(-5px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.1);
 }
 
-.incidencia h3 {
-  margin-bottom: 5px;
+.incidencia strong {
+  font-size: 16px;
+  display: block;
+  margin-bottom: 8px;
 }
 
 .incidencia p {
-  margin-bottom: 4px;
+  color: #64748b;
   font-size: 14px;
 }
 
-.incidencia small {
-  color: #666;
+/* ESTADO BADGE */
+.estado {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: bold;
 }
 
-/* =========================
-   RESPONSIVE
-========================= */
+/* COLORES PRO */
+.pendiente {
+  background: #fef3c7;
+  color: #92400e;
+}
 
-@media (max-width: 900px) {
-  main {
-    grid-template-columns: 1fr;
-  }
+.proceso {
+  background: #dbeafe;
+  color: #1e40af;
+}
+
+.resuelta {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* ===== ESTADÍSTICAS PRO ===== */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.stat-card {
+  background: linear-gradient(135deg, #ffffff, #f8fafc);
+  padding: 25px;
+  border-radius: 16px;
+  text-align: left;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+  position: relative;
+  overflow: hidden;
+}
+
+.stat-card h2 {
+  font-size: 28px;
+  margin: 5px 0;
+}
+
+.stat-card p {
+  color: #64748b;
+}
+
+/* efecto glow */
+.stat-card::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at top right, rgba(59,130,246,0.2), transparent);
+  top: 0;
+  left: 0;
+}
+
+.botones {
+  margin-top: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+button {
+  padding: 5px 10px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.estado {
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12px;
+}
+
+.estado.pendiente {
+  background-color: #ccc;
+}
+
+.estado.proceso {
+  background-color: orange;
+  color: white;
+}
+
+.estado.resuelta {
+  background-color: green;
+  color: white;
 }

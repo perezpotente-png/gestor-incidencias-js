@@ -1,67 +1,45 @@
-import { renderizar, actualizarContador } from "./render.js";
-
-const API = "http://127.0.0.1:3000/api/incidencias";
-
 document.addEventListener("DOMContentLoaded", () => {
 
-  const formulario = document.getElementById("form-incidencia");
-  const lista = document.getElementById("lista-incidencias");
+  const form = document.getElementById("formIncidencia");
 
-  const inputTitulo = document.getElementById("titulo");
-  const inputDescripcion = document.getElementById("descripcion");
-  const inputPrioridad = document.getElementById("prioridad");
+  if (form) {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  async function cargarIncidencias() {
-    const res = await fetch(API);
-    const datos = await res.json();
+      const titulo = document.getElementById("titulo").value;
+      const descripcion = document.getElementById("descripcion").value;
+      const email = document.getElementById("email").value;
 
-    renderizar(datos, lista);
-    actualizarContador(datos);
-  }
+      try {
+        const response = await fetch("http://localhost:3000/api/incidencias/public", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({ titulo, descripcion, email })
+        });
 
-  cargarIncidencias();
+        const data = await response.json();
 
-  // CREAR
-  formulario.addEventListener("submit", async (e) => {
-    e.preventDefault();
+        if (!response.ok) {
+          alert(data.message);
+          return;
+        }
 
-    const titulo = inputTitulo.value.trim();
-    const descripcion = inputDescripcion.value.trim();
-    const prioridad = inputPrioridad.value;
+        alert("Incidencia creada correctamente");
 
-    if (!titulo || !descripcion) {
-      alert("Título y descripción obligatorios");
-      return;
-    }
+        form.reset();
 
-    await fetch(API, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ titulo, descripcion, prioridad })
+        // 🔥 RECARGAR INCIDENCIAS
+        if (typeof cargarIncidencias === "function") {
+          cargarIncidencias();
+        }
+
+      } catch (error) {
+        console.error("Error:", error);
+        alert("Error al conectar con el servidor");
+      }
     });
-
-    formulario.reset();
-    cargarIncidencias();
-  });
-
-  // BOTONES DINÁMICOS (delegación de eventos)
-  lista.addEventListener("click", async (e) => {
-    const contenedor = e.target.closest(".incidencia");
-    if (!contenedor) return;
-
-    const id = contenedor.dataset.id;
-
-    // ELIMINAR
-    if (e.target.classList.contains("btn-eliminar")) {
-      await fetch(`${API}/${id}`, { method: "DELETE" });
-      cargarIncidencias();
-    }
-
-    // CAMBIAR ESTADO
-    if (e.target.classList.contains("btn-estado")) {
-      await fetch(`${API}/${id}/estado`, { method: "PUT" });
-      cargarIncidencias();
-    }
-  });
+  }
 
 });

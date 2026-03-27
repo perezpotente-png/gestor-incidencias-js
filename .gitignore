@@ -1,2 +1,5 @@
 node_modules/
 backend/incidencias.db
+backend/package.json
+backend/node_modules
+backend/server.js

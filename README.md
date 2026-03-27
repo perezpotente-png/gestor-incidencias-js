@@ -15,3 +15,14 @@ Aplicación web para la gestión de incidencias en entornos de soporte técnico.
 
 ## Objetivo
 Simular un entorno real de soporte IT.
+
+## 💡 Qué demuestra este proyecto
+
+- Gestión de estado de incidencias en tiempo real
+- Control de acceso por roles (admin vs usuario)
+- Arquitectura cliente-servidor
+- Consumo de API REST
+
+## 🌐 Demo
+
+Aplicación en vivo: 

@@ -4,8 +4,8 @@ Aplicación web fullstack para la gestión de incidencias en entornos de soporte
 
 ## 🌐 Demo
 
-👉 https://gestor-incidencias-js.netlify.app  
-👉 API: https://gestor-incidencias-js.onrender.com
+👉 https://gestor-incidencias.netlify.app
+
 
 ---
 
@@ -54,11 +54,3 @@ Permite a los usuarios reportar problemas y a los administradores gestionarlos m
 
 ---
 
-## 🔐 Acceso de prueba
-
-La aplicación incluye un usuario de demostración con permisos de administrador:
-
-- Usuario: Sergiito24  
-- Password: 1234
-
-> ⚠️ Este acceso es únicamente para fines de demostración.

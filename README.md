@@ -5,8 +5,6 @@ Aplicación web fullstack para la gestión de incidencias en entornos de soporte
 ## 🌐 Demo
 
 👉 https://gestor-incidencias.netlify.app
-
-
 ---
 
 ## 📌 Descripción
@@ -53,4 +51,5 @@ Permite a los usuarios reportar problemas y a los administradores gestionarlos m
 - Netlify (frontend)
 
 ---
+## 🚀 Proyecto actualizado
 
